@@ -14,9 +14,68 @@
         http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
         http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task-3.0.xsd">
-        
-        <bean id="user1" class="com.estsoft.springcontainer.User">
-        	<constructor-arg value="둘리"/>
-        </bean>
-        
+
+	<!-- 이 annotation만 있으면 내부 scanning까지 가능 -->
+	<!-- @Autowired -->
+	<context:annotation-config />
+
+	<!-- 초기 생성에 관한 scanning -->
+	<context:component-scan base-package="com.estsoft.mysite">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Component" />
+	</context:component-scan>
+
+
+
+	<bean id="user1" class="com.estsoft.springcontainer.User">
+		<constructor-arg value="둘리" />
+	</bean>
+
+	<bean id="user2" class="com.estsoft.springcontainer.User">
+		<constructor-arg index="0" value="둘리" />
+		<constructor-arg index="1" value="dooly@gmail.com" />
+	</bean>
+
+
+	<bean id="friend" class="com.estsoft.springcontainer.Friend">
+		<constructor-arg value="마이콜" />
+	</bean>
+
+	<bean id="user3" class="com.estsoft.springcontainer.User">
+		<constructor-arg index="1" value="donut@gmail.com" />
+		<constructor-arg index="0" value="도우넛" />
+		<property name="friend" ref="friend" />
+	</bean>
+
+	<bean id="user4" class="com.estsoft.springcontainer.User">
+		<property name="name" value="길동" />
+		<property name="email" value="gildong@gmail.com" />
+		<property name="friend">
+			<bean class="com.estsoft.springcontainer.Friend">
+				<constructor-arg value="희동이" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="guest" class="com.estsoft.springcontainer.Guest" />
+	
+	<bean id="guest2" class="com.estsoft.springcontainer.Guest" >
+		<property name="users">
+			<list>
+				<ref bean="user1"/>
+				<ref bean="user2"/>
+				<ref bean="user3"/>
+				<ref bean="user4"/>
+				<bean class="com.estsoft.springcontainer.User">
+					<constructor-arg value = "사용자5"/>
+				</bean>
+				
+			</list>
+		</property>
+	</bean>
+
 </beans>
